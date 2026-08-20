@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HTML5 Canvas</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <canvas id="draw" width="800" height="800"></canvas>
+    <script></script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+      }
+    </style>
+
+    <script>
+      const canvas = document.querySelector("#draw");
+      const ctx = canvas.getContext("2d");
+
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+
+      ctx.strokeStyle = "red";
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      let lastX = 0;
+      let lastY = 0;
+      let hue = 0;
+      //   flag for lineWidth
+      let direction = true;
+      // flag for mouseDown
+      let isDrawing = false;
+
+      function draw(e) {
+        if (!isDrawing) return;
+
+        ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+
+        ctx.beginPath();
+        // start from
+        ctx.moveTo(lastX, lastY);
+        // up to
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+
+        // increasing hue every mousemove+click
+        hue += 2;
+        if (hue >= 360) {
+          hue = 0;
+        }
+
+        if (ctx.lineWidth >= 70 || ctx.lineWidth <= 1) {
+          direction = !direction;
+        }
+
+        if (direction) {
+          ctx.lineWidth++;
+        } else {
+          ctx.lineWidth--;
+        }
+
+        // update the lastX,lastY so that next mousemove+click event catches just where the line ends
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      }
+
+      canvas.addEventListener("mousedown", (e) => {
+        isDrawing = true;
+        // start the drawing from where the mouse down
+        [lastX, lastY] = [e.offsetX, e.offsetY];
+      });
+
+      canvas.addEventListener("mousemove", draw);
+      canvas.addEventListener("mouseup", () => (isDrawing = false));
+      canvas.addEventListener("mouseout", () => (isDrawing = false));
+    </script>
+  </body>
+</html>
