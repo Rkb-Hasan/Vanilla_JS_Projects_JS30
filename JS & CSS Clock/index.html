@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JS + CSS Clock</title>
+    <link rel="icon" href="https://fav.farm/🔥" />
+    <style>
+      html {
+        background: #018ded url(https://unsplash.it/1500/1000?image=881&blur=5);
+        background-size: cover;
+        font-family: "helvetica neue";
+        text-align: center;
+        font-size: 10px;
+      }
+
+      body {
+        margin: 0;
+        font-size: 2rem;
+        display: flex;
+        flex: 1;
+        min-height: 100vh;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* --- LOADER STYLE --- */
+      .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #fff;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        animation: rotation 1s linear infinite;
+        transition: opacity 0.4s ease;
+        position: absolute;
+      }
+
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* --- CLOCK STYLE --- */
+      .clock {
+        opacity: 0; /* Hidden smoothly by default */
+        visibility: hidden;
+        transform: scale(0.9);
+        transition: all 0.5s ease-out;
+        width: 30rem;
+        height: 30rem;
+        border: 20px solid white;
+        border-radius: 50%;
+        margin: 50px auto;
+        position: relative;
+        padding: 2rem;
+        box-shadow:
+          0 0 0 4px rgba(0, 0, 0, 0.1),
+          inset 0 0 0 3px #efefef,
+          inset 0 0 10px black,
+          0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .clock-face {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform: translateY(-3px);
+      }
+
+      .hand {
+        width: 50%;
+        height: 6px;
+        background: black;
+        position: absolute;
+        top: 50%;
+        transform-origin: right;
+        transform: rotate(90deg);
+        /* Smooth transitions prevent the hands from snapping on first load */
+        transition: transform 0.05s cubic-bezier(0.1, 2.7, 0.58, 1);
+      }
+
+      /* --- STATE MANAGERS --- */
+      /* When loading is complete, fade out loader and fade in clock */
+      body.loaded .loader {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      body.loaded .clock {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Real visual spinner instead of "...." text -->
+    <div class="loader"></div>
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+    <script>
+      const secondHand = document.querySelector(".second-hand");
+      const minHand = document.querySelector(".min-hand");
+      const hourHand = document.querySelector(".hour-hand");
+
+      function updateClock() {
+        const now = new Date();
+        const seconds = now.getSeconds();
+        const min = now.getMinutes();
+        const hour = now.getHours();
+
+        const secondHandPos = (seconds / 60) * 360 + 90;
+        const minHandPos = (min / 60) * 360 + 90;
+        const hourHandPos = (hour / 12) * 360 + 90;
+
+        secondHand.style.transform = `rotate(${secondHandPos}deg)`;
+        minHand.style.transform = `rotate(${minHandPos}deg)`;
+        hourHand.style.transform = `rotate(${hourHandPos}deg)`;
+      }
+
+      // 1. Run the clock functions immediately on page load
+      updateClock();
+
+      // 2. Instantly reveal clock and hide loader via CSS class toggle
+      document.body.classList.add("loaded");
+
+      // 3. Keep updating every second moving forward
+      setInterval(updateClock, 1000);
+    </script>
+  </body>
+</html>
