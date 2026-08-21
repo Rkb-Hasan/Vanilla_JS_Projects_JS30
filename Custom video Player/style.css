@@ -60,11 +60,14 @@ body {
 .player__button:focus {
   border-color: #ffc600;
 }
-/* .player__button:active {
 
-} */
 .player__button:not(:first-of-type):active {
   font-size: 11px;
+}
+.player__button:not(:first-of-type):hover {
+  background-color: rgba(128, 128, 128, 0.281);
+  font-weight: 600;
+  color: #ffc400df;
 }
 .player__slider {
   width: 10px;
@@ -123,7 +126,7 @@ body {
   width: 50%;
   background: #ffc600;
   flex: 0;
-  flex-basis: 50%;
+  flex-basis: 0%;
 }
 
 /* unholy css to style input type="range" */
