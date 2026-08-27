@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS30 Time Tally Challenge</title>
+    <style>
+      :root {
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --accent-color: #38bdf8;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 500px;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        color: var(--accent-color);
+      }
+
+      .dashboard {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+
+      .stat-row:last-child {
+        margin-bottom: 0;
+        padding-top: 10px;
+        border-top: 1px solid #334155;
+        font-weight: bold;
+        color: var(--accent-color);
+      }
+
+      .playlist {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .track {
+        background: var(--card-bg);
+        padding: 15px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 4px solid var(--accent-color);
+      }
+
+      .track-info .title {
+        font-weight: 500;
+        display: block;
+      }
+
+      .track-info .genre {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .duration {
+        font-family: monospace;
+        font-size: 1.1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Audio Playlist Tally</h1>
+
+      <!-- Dashboard displaying calculations -->
+      <div class="dashboard">
+        <div class="stat-row">
+          <span>Total Tracks:</span>
+          <span id="total-tracks">0</span>
+        </div>
+        <div class="stat-row">
+          <span>Total Playtime:</span>
+          <span id="total-duration">00:00:00</span>
+        </div>
+      </div>
+
+      <!-- The tracks data source -->
+      <ul class="playlist">
+        <li class="track" data-time="3:45">
+          <div class="track-info">
+            <span class="title">Midnight City</span>
+            <span class="genre">Electronic</span>
+          </div>
+          <span class="duration">3:45</span>
+        </li>
+        <li class="track" data-time="5:12">
+          <div class="track-info">
+            <span class="title">Stairway to Code</span>
+            <span class="genre">Rock</span>
+          </div>
+          <span class="duration">5:12</span>
+        </li>
+        <li class="track" data-time="2:30">
+          <div class="track-info">
+            <span class="title">Lo-Fi Bug Fixing</span>
+            <span class="genre">Chill</span>
+          </div>
+          <span class="duration">2:30</span>
+        </li>
+        <li class="track" data-time="12:04">
+          <div class="track-info">
+            <span class="title">The Epic Callback Jam</span>
+            <span class="genre">Rock</span>
+          </div>
+          <span class="duration">12:04</span>
+        </li>
+        <li class="track" data-time="4:19">
+          <div class="track-info">
+            <span class="title">Synthwave Dreams</span>
+            <span class="genre">Electronic</span>
+          </div>
+          <span class="duration">4:19</span>
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      // 1. Select all track elements with [data-time]
+      const tracks = Array.from(document.querySelectorAll("[data-time]"));
+      const totalDuration = document.querySelector("#total-duration");
+      // 2. Count the total tracks and update '#total-tracks'
+      document.getElementById("total-tracks").textContent = tracks.length;
+
+      // ----------------------------------------------------
+      // YOUR CHALLENGE:
+      // 1. Map over the tracks to extract the data-time strings.
+      // 2. Convert each time string (MM:SS) into total seconds.
+      // 3. Accumulate all seconds into a grand total using .reduce().
+      // 4. Convert total seconds back into HH:MM:SS format.
+      // 5. Inject that formatted string into '#total-duration'.
+      // ----------------------------------------------------
+
+      // Write your code below:
+
+      const seconds = tracks
+        .map((track) => track.dataset.time)
+        .map((timeCode) => {
+          const [mins, secs] = timeCode.split(":").map(parseFloat);
+          return mins * 60 + secs;
+        })
+        .reduce((total, vidSec) => total + vidSec);
+
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      // only returns the leftover secs that could not be converted to minutes
+      const secondsLeft = seconds % 60;
+
+      const hh = String(hours).padStart(2, "0");
+      const mm = String(minutes).padStart(2, "0");
+      const ss = String(secondsLeft).padStart(2, "0");
+
+      totalDuration.textContent = `${hh}:${mm}:${ss}`;
+    </script>
+  </body>
+</html>
